@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achat, Vente & Courtage - Plateforme Multi-Services</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">Market & Courtage</div>
+        <nav>
+            <button onclick="filterCategory('all')">Tous</button>
+            <button onclick="filterCategory('gros')">Vente en Gros</button>
+            <button onclick="filterCategory('detail')">Vente au Détail</button>
+            <button onclick="filterCategory('immobilier')">Immobilier & Terrains</button>
+            <button onclick="filterCategory('equipement')">Matériels & Articles</button>
+        </nav>
+        <button class="btn-primary" onclick="toggleModal('publish-modal')">+ Publier une Annonce</button>
+    </header>
+
+    <section class="hero">
+        <h1>Achetez, Vendez et Réservez en Gros ou au Détail</h1>
+        <p>Maisons, parcelles, équipements, véhicules et produits divers avec gestion claire des commissions.</p>
+        <input type="text" id="search-bar" placeholder="Rechercher un produit, maison, parcelle..." onkeyup="searchItems()">
+    </section>
+
+    <main class="container">
+        <h2>Annonces Récentes</h2>
+        <div id="grid-listings" class="grid">
+            <!-- Les éléments seront générés dynamiquement par JS -->
+        </div>
+    </main>
+
+    <!-- Modal d'ajout d'annonce -->
+    <div id="publish-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleModal('publish-modal')">&times;</span>
+            <h2>Publier une annonce / un bien</h2>
+            <form id="add-item-form">
+                <label for="title">Titre de l'annonce :</label>
+                <input type="text" id="title" required placeholder="Ex: Vente Parcelle 20x25m ou Riz 50kg">
+
+                <label for="type">Type de transaction :</label>
+                <select id="type" required>
+                    <option value="detail">Vente au Détail</option>
+                    <option value="gros">Vente en Gros</option>
+                    <option value="immobilier">Immobilier / Terrain (Courtage)</option>
+                    <option value="equipement">Matériel / Article</option>
+                </select>
+
+                <label for="price">Prix ($ ou FC) :</label>
+                <input type="number" id="price" required placeholder="Ex: 5000">
+
+                <label for="commission">Commission (%) ou Montant Fixe :</label>
+                <input type="text" id="commission" placeholder="Ex: 5% ou $50 pour l'intermédiaire">
+
+                <label for="image">URL de l'image :</label>
+                <input type="url" id="image" placeholder="https://via.placeholder.com/300" required>
+
+                <label for="description">Description complète :</label>
+                <textarea id="description" rows="4" required placeholder="Détails du produit, localisation, conditions..."></textarea>
+
+                <label for="phone">Numéro WhatsApp / Téléphone :</label>
+                <input type="tel" id="phone" required placeholder="+243...">
+
+                <button type="submit" class="btn-submit">Publier l'annonce</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Market & Courtage - Déployé gratuitement sur Netlify.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
