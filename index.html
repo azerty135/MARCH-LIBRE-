@@ -3,75 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Achat, Vente & Courtage - Plateforme Multi-Services</title>
+    <title>MARCHÉ LIBRE - Plateforme B2B & Commerce Général</title>
     <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <header class="navbar">
-        <div class="logo">Market & Courtage</div>
-        <nav>
-            <button onclick="filterCategory('all')">Tous</button>
-            <button onclick="filterCategory('gros')">Vente en Gros</button>
-            <button onclick="filterCategory('detail')">Vente au Détail</button>
-            <button onclick="filterCategory('immobilier')">Immobilier & Terrains</button>
-            <button onclick="filterCategory('equipement')">Matériels & Articles</button>
-        </nav>
-        <button class="btn-primary" onclick="toggleModal('publish-modal')">+ Publier une Annonce</button>
+    <!-- En-tête principal -->
+    <header class="main-header">
+        <div class="logo-container">
+            <h1><i class="fa-solid fa-store"></i> MARCHÉ <span>LIBRE</span></h1>
+            <p class="tagline">Plateforme de Commerce Général, Gros & Courtage</p>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Rechercher des articles, parcelles, équipements...">
+            <button id="searchBtn"><i class="fa-solid fa-search"></i></button>
+        </div>
+        <div class="header-actions">
+            <button id="openAddModalBtn" class="btn-primary"><i class="fa-solid fa-plus"></i> Publier une offre</button>
+        </div>
     </header>
 
-    <section class="hero">
-        <h1>Achetez, Vendez et Réservez en Gros ou au Détail</h1>
-        <p>Maisons, parcelles, équipements, véhicules et produits divers avec gestion claire des commissions.</p>
-        <input type="text" id="search-bar" placeholder="Rechercher un produit, maison, parcelle..." onkeyup="searchItems()">
-    </section>
+    <!-- Barre de catégories -->
+    <nav class="categories-nav">
+        <button class="cat-btn active" data-cat="all">Toutes les catégories</button>
+        <button class="cat-btn" data-cat="gros">Vente en Gros & Détail</button>
+        <button class="cat-btn" data-cat="immobilier">Immobilier & Parcelles</button>
+        <button class="cat-btn" data-cat="materiel">Équipements & Matériel</button>
+        <button class="cat-btn" data-cat="agriculture">Agriculture & Produit locaux</button>
+    </nav>
 
+    <!-- Contenu Principal -->
     <main class="container">
-        <h2>Annonces Récentes</h2>
-        <div id="grid-listings" class="grid">
-            <!-- Les éléments seront générés dynamiquement par JS -->
+        <section class="hero-banner">
+            <h2>Bienvenue sur MARCHÉ LIBRE</h2>
+            <p>La référence pour vos achats, ventes en gros, opportunités immobilières et négociation directe via WhatsApp.</p>
+        </section>
+
+        <!-- Grille des offres -->
+        <div id="productsGrid" class="products-grid">
+            <!-- Les offres s'affichent dynamiquement ici -->
         </div>
     </main>
 
-    <!-- Modal d'ajout d'annonce -->
-    <div id="publish-modal" class="modal">
+    <!-- Modal pour ajouter une nouvelle offre -->
+    <div id="addProductModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="toggleModal('publish-modal')">&times;</span>
-            <h2>Publier une annonce / un bien</h2>
-            <form id="add-item-form">
-                <label for="title">Titre de l'annonce :</label>
-                <input type="text" id="title" required placeholder="Ex: Vente Parcelle 20x25m ou Riz 50kg">
-
-                <label for="type">Type de transaction :</label>
-                <select id="type" required>
-                    <option value="detail">Vente au Détail</option>
-                    <option value="gros">Vente en Gros</option>
-                    <option value="immobilier">Immobilier / Terrain (Courtage)</option>
-                    <option value="equipement">Matériel / Article</option>
+            <span class="close-btn">&times;</span>
+            <h2>Publier une offre sur MARCHÉ LIBRE</h2>
+            <form id="productForm">
+                <input type="text" id="prodTitle" placeholder="Nom de l'article ou titre de l'annonce" required>
+                <select id="prodCategory" required>
+                    <option value="gros">Vente en Gros & Détail</option>
+                    <option value="immobilier">Immobilier & Parcelles</option>
+                    <option value="materiel">Équipements & Matériel</option>
+                    <option value="agriculture">Agriculture & Produit locaux</option>
                 </select>
-
-                <label for="price">Prix ($ ou FC) :</label>
-                <input type="number" id="price" required placeholder="Ex: 5000">
-
-                <label for="commission">Commission (%) ou Montant Fixe :</label>
-                <input type="text" id="commission" placeholder="Ex: 5% ou $50 pour l'intermédiaire">
-
-                <label for="image">URL de l'image :</label>
-                <input type="url" id="image" placeholder="https://via.placeholder.com/300" required>
-
-                <label for="description">Description complète :</label>
-                <textarea id="description" rows="4" required placeholder="Détails du produit, localisation, conditions..."></textarea>
-
-                <label for="phone">Numéro WhatsApp / Téléphone :</label>
-                <input type="tel" id="phone" required placeholder="+243...">
-
-                <button type="submit" class="btn-submit">Publier l'annonce</button>
+                <input type="text" id="prodPrice" placeholder="Prix (ex: 50$ / sac ou Négociable)" required>
+                <input type="text" id="prodMoq" placeholder="Quantité / Conditionnement (ex: Min. 10 pièces ou 1 parcelle)" required>
+                <textarea id="prodDesc" placeholder="Description détaillée de l'offre ou caractéristiques..." required></textarea>
+                <input type="text" id="prodImage" placeholder="Lien de l'image (URL) - Optionnel">
+                <input type="text" id="prodContact" placeholder="Numéro WhatsApp (ex: +243...)" required>
+                <button type="submit" class="btn-submit">Mettre en ligne sur MARCHÉ LIBRE</button>
             </form>
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 Market & Courtage - Déployé gratuitement sur Netlify.</p>
+        <p>&copy; 2026 <strong>MARCHÉ LIBRE</strong>. Tous droits réservés.</p>
     </footer>
 
     <script src="app.js"></script>
