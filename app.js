@@ -1,128 +1,121 @@
-// Données initiales par défaut
-const defaultListings = [
+// Liste d'exemples d'annonces initiales
+let products = JSON.parse(localStorage.getItem('marchelibre_products')) || [
     {
         id: 1,
-        title: "Parcelle 20m x 20m à Vendre",
-        type: "immobilier",
-        price: "15000",
-        commission: "5% pour l'intermédiaire",
-        image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400",
-        description: "Terrain bien situé avec titre de propriété valide. Idéal pour construction immédiate.",
-        phone: "+243000000000"
+        title: "Ciment gris haute résistance (Lot de gros)",
+        category: "materiel",
+        price: "8.5$ / Sac",
+        moq: "Commande min: 100 Sacs",
+        desc: "Ciment recommandé pour grands travaux, dalles et ouvrages d'art.",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=500",
+        contact: "+243000000000"
     },
     {
         id: 2,
-        title: "Sac de Ciment 50kg - Vente en Gros",
-        type: "gros",
-        price: "12",
-        commission: "0.5$ / sac pour commissionnaire",
-        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400",
-        description: "Commande minimale: 100 sacs. Livraison possible.",
-        phone: "+243000000000"
-    },
-    {
-        id: 3,
-        title: "Maison Résidentielle 4 Chambres",
-        type: "immobilier",
-        price: "45000",
-        commission: "1000$ commission fixe",
-        image: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=400",
-        description: "Maison clôturée avec électricité et eau constante.",
-        phone: "+243000000000"
+        title: "Parcelle clôturée à vendre (Katwa / Butembo)",
+        category: "immobilier",
+        price: "15,000$ (Négociable)",
+        moq: "Dimensions: 20m / 20m",
+        desc: "Excellente parcelle commerciale et résidentielle avec titres fonciers en ordre.",
+        image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500",
+        contact: "+243000000000"
     }
 ];
 
-// Chargement des données depuis localStorage ou défaut
-let listings = JSON.parse(localStorage.getItem('app_listings')) || defaultListings;
+const productsGrid = document.getElementById('productsGrid');
+const searchInput = document.getElementById('searchInput');
+const searchBtn = document.getElementById('searchBtn');
+const catBtns = document.querySelectorAll('.cat-btn');
 
-function saveListings() {
-    localStorage.setItem('app_listings', JSON.stringify(listings));
-}
+const modal = document.getElementById('addProductModal');
+const openModalBtn = document.getElementById('openAddModalBtn');
+const closeModalBtn = document.querySelector('.close-btn');
+const productForm = document.getElementById('productForm');
 
-function renderListings(itemsToRender) {
-    const grid = document.getElementById('grid-listings');
-    grid.innerHTML = '';
-
-    if (itemsToRender.length === 0) {
-        grid.innerHTML = '<p>Aucune annonce disponible.</p>';
+// Fonction d'affichage des annonces
+function displayProducts(productsToDisplay) {
+    productsGrid.innerHTML = '';
+    if (productsToDisplay.length === 0) {
+        productsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#777; padding: 40px 0;">Aucune offre disponible pour le moment sur MARCHÉ LIBRE.</p>';
         return;
     }
 
-    itemsToRender.forEach(item => {
+    productsToDisplay.forEach(prod => {
         const card = document.createElement('div');
-        card.className = 'card';
-
-        const badgeClass = `badge-${item.type}`;
-        const typeLabel = {
-            'gros': 'Vente en Gros',
-            'detail': 'Vente au Détail',
-            'immobilier': 'Immobilier / Courtage',
-            'equipement': 'Matériel / Article'
-        }[item.type] || 'Général';
+        card.className = 'product-card';
+        
+        const imgSrc = prod.image && prod.image.startsWith('http') ? prod.image : 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=500';
 
         card.innerHTML = `
-            <img src="${item.image}" alt="${item.title}">
-            <div class="card-body">
-                <span class="badge ${badgeClass}">${typeLabel}</span>
-                <h3>${item.title}</h3>
-                <p class="price">$${item.price}</p>
-                <p class="commission"><strong>Commission :</strong> ${item.commission || 'Non spécifiée'}</p>
-                <p>${item.description}</p>
-                <a class="btn-contact" href="https://wa.me/${item.phone.replace(/[^0-9]/g, '')}?text=Bonjour,%20je%20suis%20intéressé%20par%20votre%20annonce:%20${encodeURIComponent(item.title)}" target="_blank">Contacter sur WhatsApp</a>
+            <div>
+                <img src="${imgSrc}" alt="${prod.title}" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">${prod.title}</h3>
+                    <div class="product-price">${prod.price}</div>
+                    <div class="product-moq"><i class="fa-solid fa-box"></i> ${prod.moq}</div>
+                    <p class="product-desc">${prod.desc}</p>
+                </div>
             </div>
+            <a href="https://wa.me/${prod.contact}?text=Bonjour,%20je%20vous%20contacte%20depuis%20MARCHÉ%20LIBRE%20concernant%20l'offre:%20*${encodeURIComponent(prod.title)}*" target="_blank" class="btn-whatsapp">
+                <i class="fa-brands fa-whatsapp"></i> Contacter / Négocier
+            </a>
         `;
-
-        grid.appendChild(card);
+        productsGrid.appendChild(card);
     });
 }
 
-function filterCategory(category) {
-    if (category === 'all') {
-        renderListings(listings);
-    } else {
-        const filtered = listings.filter(item => item.type === category);
-        renderListings(filtered);
-    }
+// Filtrage par catégorie
+catBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        catBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const cat = btn.getAttribute('data-cat');
+        
+        if (cat === 'all') {
+            displayProducts(products);
+        } else {
+            const filtered = products.filter(p => p.category === cat);
+            displayProducts(filtered);
+        }
+    });
+});
+
+// Recherche
+function handleSearch() {
+    const query = searchInput.value.toLowerCase();
+    const filtered = products.filter(p => p.title.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query));
+    displayProducts(filtered);
 }
 
-function searchItems() {
-    const query = document.getElementById('search-bar').value.toLowerCase();
-    const filtered = listings.filter(item => 
-        item.title.toLowerCase().includes(query) || 
-        item.description.toLowerCase().includes(query)
-    );
-    renderListings(filtered);
-}
+searchBtn.addEventListener('click', handleSearch);
+searchInput.addEventListener('keyup', handleSearch);
 
-function toggleModal(modalId) {
-    const modal = document.getElementById(modalId);
-    modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
-}
+// Gestion de la modale
+openModalBtn.addEventListener('click', () => modal.style.display = 'flex');
+closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+window.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
 
-// Soumission du formulaire d'ajout
-document.getElementById('add-item-form').addEventListener('submit', function(e) {
+// Formulaire de publication
+productForm.addEventListener('submit', (e) => {
     e.preventDefault();
-
-    const newItem = {
+    const newProd = {
         id: Date.now(),
-        title: document.getElementById('title').value,
-        type: document.getElementById('type').value,
-        price: document.getElementById('price').value,
-        commission: document.getElementById('commission').value,
-        image: document.getElementById('image').value || 'https://via.placeholder.com/300',
-        description: document.getElementById('description').value,
-        phone: document.getElementById('phone').value
+        title: document.getElementById('prodTitle').value,
+        category: document.getElementById('prodCategory').value,
+        price: document.getElementById('prodPrice').value,
+        moq: document.getElementById('prodMoq').value,
+        desc: document.getElementById('prodDesc').value,
+        image: document.getElementById('prodImage').value,
+        contact: document.getElementById('prodContact').value.replace(/[^0-9+]/g, '')
     };
 
-    listings.unshift(newItem);
-    saveListings();
-    renderListings(listings);
+    products.unshift(newProd);
+    localStorage.setItem('marchelibre_products', JSON.stringify(products));
     
-    this.reset();
-    toggleModal('publish-modal');
+    productForm.reset();
+    modal.style.display = 'none';
+    displayProducts(products);
 });
 
 // Initialisation au chargement
-document.addEventListener('DOMContentLoaded', () => {
-    renderListings(listings);
-});
+displayProducts(products);
