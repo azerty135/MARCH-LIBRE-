@@ -10,69 +10,118 @@
 </head>
 <body>
 
-    <!-- En-tête principal -->
-    <header class="main-header">
-        <div class="logo-container">
-            <h1><i class="fa-solid fa-store"></i> MARCHÉ <span>LIBRE</span></h1>
-            <p class="tagline">Plateforme de Commerce Général, Gros & Courtage</p>
+    <!-- En-tête supérieur style Alibaba -->
+    <header class="alibaba-header">
+        <div class="header-top">
+            <div class="logo-area">
+                <i class="fa-solid fa-store logo-icon"></i>
+                <span class="logo-title">MARCHÉ <span>LIBRE</span></span>
+            </div>
+            <button id="openAddModalBtn" class="btn-publish"><i class="fa-solid fa-plus"></i> Publier une annonce</button>
         </div>
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Rechercher des articles, parcelles, équipements...">
-            <button id="searchBtn"><i class="fa-solid fa-search"></i></button>
-        </div>
-        <div class="header-actions">
-            <button id="openAddModalBtn" class="btn-primary"><i class="fa-solid fa-plus"></i> Publier une offre</button>
+
+        <!-- Barre de recherche avancée -->
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fa-solid fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Ex: ciment, parcelle à vendre, friperie, matériel...">
+                <button id="searchBtn" class="search-submit"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
         </div>
     </header>
 
-    <!-- Barre de catégories -->
-    <nav class="categories-nav">
-        <button class="cat-btn active" data-cat="all">Toutes les catégories</button>
-        <button class="cat-btn" data-cat="gros">Vente en Gros & Détail</button>
-        <button class="cat-btn" data-cat="immobilier">Immobilier & Parcelles</button>
-        <button class="cat-btn" data-cat="materiel">Équipements & Matériel</button>
-        <button class="cat-btn" data-cat="agriculture">Agriculture & Produit locaux</button>
+    <!-- Navigation par onglets de catégories -->
+    <nav class="tabs-nav">
+        <button class="tab-btn active" data-cat="all"><i class="fa-solid fa-border-all"></i> Tout</button>
+        <button class="tab-btn" data-cat="gros"><i class="fa-solid fa-box-open"></i> Gros & Détail</button>
+        <button class="tab-btn" data-cat="immobilier"><i class="fa-solid fa-building"></i> Immobilier</button>
+        <button class="tab-btn" data-cat="materiel"><i class="fa-solid fa-tools"></i> Équipements</button>
+        <button class="tab-btn" data-cat="agriculture"><i class="fa-solid fa-seedling"></i> Agriculture</button>
     </nav>
 
-    <!-- Contenu Principal -->
-    <main class="container">
-        <section class="hero-banner">
-            <h2>Bienvenue sur MARCHÉ LIBRE</h2>
-            <p>La référence pour vos achats, ventes en gros, opportunités immobilières et négociation directe via WhatsApp.</p>
-        </section>
+    <!-- Contenu Principal / Grille des produits -->
+    <main class="main-container">
+        <div class="results-info">
+            <h2 id="sectionTitle">À découvrir</h2>
+            <span id="countBadge">8 annonces</span>
+        </div>
 
-        <!-- Grille des offres -->
         <div id="productsGrid" class="products-grid">
-            <!-- Les offres s'affichent dynamiquement ici -->
+            <!-- Les cartes de produits s'injectent dynamiquement ici -->
         </div>
     </main>
 
-    <!-- Modal pour ajouter une nouvelle offre -->
+    <!-- Pied de page avec accès admin discret -->
+    <footer class="main-footer">
+        <p>&copy; 2026 MARCHÉ LIBRE. Tous droits réservés.</p>
+        <button id="adminLoginBtn" class="admin-link-btn"><i class="fa-solid fa-lock"></i> Espace Administrateur</button>
+    </footer>
+
+    <!-- Barre de navigation inférieure mobile -->
+    <div class="mobile-bottom-nav">
+        <button class="nav-item active" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+            <i class="fa-solid fa-house"></i>
+            <span>Accueil</span>
+        </button>
+        <button class="nav-item" onclick="document.getElementById('openAddModalBtn').click()">
+            <i class="fa-solid fa-circle-plus" style="font-size: 24px; color: var(--primary-color);"></i>
+            <span>Publier</span>
+        </button>
+        <button class="nav-item" onclick="document.getElementById('adminLoginBtn').click()">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Admin</span>
+        </button>
+    </div>
+
+    <!-- Modal de publication d'annonce -->
     <div id="addProductModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn">&times;</span>
+            <span class="close-btn" onclick="closeModals()">&times;</span>
             <h2>Publier une offre sur MARCHÉ LIBRE</h2>
             <form id="productForm">
-                <input type="text" id="prodTitle" placeholder="Nom de l'article ou titre de l'annonce" required>
+                <input type="text" id="prodTitle" placeholder="Titre de l'offre (ex: Sacs de maïs 25kg)" required>
                 <select id="prodCategory" required>
-                    <option value="gros">Vente en Gros & Détail</option>
+                    <option value="gros">Gros & Détail</option>
                     <option value="immobilier">Immobilier & Parcelles</option>
                     <option value="materiel">Équipements & Matériel</option>
-                    <option value="agriculture">Agriculture & Produit locaux</option>
+                    <option value="agriculture">Agriculture & Intrants</option>
                 </select>
-                <input type="text" id="prodPrice" placeholder="Prix (ex: 50$ / sac ou Négociable)" required>
-                <input type="text" id="prodMoq" placeholder="Quantité / Conditionnement (ex: Min. 10 pièces ou 1 parcelle)" required>
-                <textarea id="prodDesc" placeholder="Description détaillée de l'offre ou caractéristiques..." required></textarea>
+                <input type="text" id="prodPrice" placeholder="Prix (ex: $450 ou FC 85 000)" required>
+                <input type="text" id="prodMoq" placeholder="Condition / MOQ (ex: Min. 10 sacs ou Négociable)" required>
+                <input type="text" id="prodLocation" placeholder="Lieu (ex: Lubumbashi, Centre-ville)" required>
+                <textarea id="prodDesc" placeholder="Description détaillée..." required></textarea>
                 <input type="text" id="prodImage" placeholder="Lien de l'image (URL) - Optionnel">
                 <input type="text" id="prodContact" placeholder="Numéro WhatsApp (ex: +243...)" required>
-                <button type="submit" class="btn-submit">Mettre en ligne sur MARCHÉ LIBRE</button>
+                <button type="submit" class="btn-submit">Mettre en ligne</button>
             </form>
         </div>
     </div>
 
-    <footer>
-        <p>&copy; 2026 <strong>MARCHÉ LIBRE</strong>. Tous droits réservés.</p>
-    </footer>
+    <!-- Modal Panneau d'Administration (Secret & Protégé) -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content admin-modal-content">
+            <span class="close-btn" onclick="closeModals()">&times;</span>
+            <h2><i class="fa-solid fa-gauge-high"></i> Contrôle Administratif</h2>
+            <div id="adminBody">
+                <!-- S'affiche si non connecté -->
+                <div id="adminAuthSection">
+                    <p style="font-size: 13px; color: #64748b; margin-bottom: 12px;">Entrez le mot de passe administrateur pour gérer les publications.</p>
+                    <input type="password" id="adminPasswordInput" placeholder="Mot de passe admin">
+                    <button id="adminLoginSubmit" class="btn-submit">Se connecter au contrôle</button>
+                </div>
+                <!-- S'affiche une fois connecté -->
+                <div id="adminPanelSection" style="display: none;">
+                    <div class="admin-stats-bar">
+                        <span>Total annonces : <strong id="adminTotalCount">0</strong></span>
+                        <button id="adminLogoutBtn" class="btn-logout">Déconnexion</button>
+                    </div>
+                    <div id="adminProductList" class="admin-product-list">
+                        <!-- Liste des annonces avec boutons de suppression -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>
