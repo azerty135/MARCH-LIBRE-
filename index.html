@@ -3,128 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MARCHÉ LIBRE - Plateforme de Commerce & Opportunités</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- FontAwesome pour les icônes -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>GlobalMarket & Courtage - Gros, Détail & Immobilier</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800">
 
-    <!-- En-tête principal épuré et élégant -->
-    <header class="app-header">
-        <div class="header-content">
-            <div class="brand-logo">
-                <i class="fa-solid fa-store"></i>
-                <h1>MARCHÉ <span>LIBRE</span></h1>
+    <!-- En-tête / Barre de navigation -->
+    <header class="bg-indigo-900 text-white sticky top-0 z-40 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <i data-lucide="store" class="w-8 h-8 text-yellow-400"></i>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">GlobalMarket & Courtage</h1>
+                    <p class="text-xs text-indigo-200">Gros, Détail, Terrains, Maisons & Commissions</p>
+                </div>
             </div>
-            <button id="openAddModalBtn" class="btn-publish">
-                <i class="fa-solid fa-plus"></i> Publier une annonce
-            </button>
-        </div>
 
-        <!-- Section Hero intégrée -->
-        <div class="hero-section">
-            <h2>Tout à portée de main.</h2>
-            <p>Des bons plans du quotidien aux grandes opportunités. Achetez, vendez et négociez en direct.</p>
-            <div class="search-bar-wrapper">
-                <i class="fa-solid fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Rechercher un produit, un matériel, une parcelle...">
-                <button id="searchBtn">Rechercher</button>
+            <!-- Barre de recherche -->
+            <div class="w-full md:w-1/3">
+                <div class="relative">
+                    <input type="text" id="searchInput" placeholder="Rechercher (maison, ciment, parcelle, riz...)" 
+                           class="w-full pl-10 pr-4 py-2 rounded-full text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                    <i data-lucide="search" class="w-4 h-4 text-gray-500 absolute left-3 top-3"></i>
+                </div>
+            </div>
+
+            <!-- Bouton Ajouter annonce -->
+            <div class="flex gap-2">
+                <button onclick="openModal()" class="bg-yellow-500 hover:bg-yellow-400 text-indigo-950 font-bold px-4 py-2 rounded-lg flex items-center gap-2 text-sm shadow transition">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i> Déposer une Offre
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- Navigation par catégories -->
-    <nav class="categories-bar">
-        <div class="categories-scroll">
-            <button class="cat-chip active" data-cat="all">Tout voir</button>
-            <button class="cat-chip" data-cat="gros">Gros & Détail</button>
-            <button class="cat-chip" data-cat="immobilier">Immobilier</button>
-            <button class="cat-chip" data-cat="materiel">Équipements & Matériel</button>
-            <button class="cat-chip" data-cat="agriculture">Agriculture</button>
+    <!-- Filtres rapides -->
+    <section class="max-w-7xl mx-auto px-4 py-6">
+        <div class="flex flex-wrap gap-2 items-center justify-between">
+            <div class="flex flex-wrap gap-2" id="filterButtons">
+                <button onclick="setFilter('all')" class="filter-btn active bg-indigo-600 text-white px-4 py-1.5 rounded-full text-xs font-semibold">Tous</button>
+                <button onclick="setFilter('immobilier')" class="filter-btn bg-white border border-gray-300 px-4 py-1.5 rounded-full text-xs font-semibold hover:bg-gray-100">🏡 Immobilier & Parcelles (Commissions)</button>
+                <button onclick="setFilter('gros')" class="filter-btn bg-white border border-gray-300 px-4 py-1.5 rounded-full text-xs font-semibold hover:bg-gray-100">📦 Ventes en Gros</button>
+                <button onclick="setFilter('detail')" class="filter-btn bg-white border border-gray-300 px-4 py-1.5 rounded-full text-xs font-semibold hover:bg-gray-100">🛍️ Ventes au Détail</button>
+                <button onclick="setFilter('vehicules')" class="filter-btn bg-white border border-gray-300 px-4 py-1.5 rounded-full text-xs font-semibold hover:bg-gray-100">🚗 Véhicules & Matériel</button>
+            </div>
+            <div class="text-xs text-gray-500" id="itemCount">0 annonces affichées</div>
         </div>
-    </nav>
+    </section>
 
-    <!-- Contenu Principal -->
-    <main class="main-container">
-        <div class="section-title-row">
-            <h3>À découvrir</h3>
-            <span id="countBadge">0 annonce</span>
-        </div>
-
-        <div id="productsGrid" class="products-grid">
-            <!-- Les cartes s'injectent proprement ici -->
+    <!-- Grille des Annonces -->
+    <main class="max-w-7xl mx-auto px-4 pb-16">
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Rempli dynamiquement par JS -->
         </div>
     </main>
 
-    <!-- Pied de page professionnel avec accès admin discret -->
-    <footer class="app-footer">
-        <p>&copy; 2026 <strong>MARCHÉ LIBRE</strong>. Tous droits réservés.</p>
-        <button id="adminLoginBtn" class="admin-access-btn">
-            <i class="fa-solid fa-lock"></i> Panneau d'administration
-        </button>
-    </footer>
+    <!-- Modal d'Ajout d'Annonce -->
+    <div id="listingModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h3 class="font-bold text-lg text-gray-800">Publier une annonce / Produit</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
 
-    <!-- Modal de publication -->
-    <div id="addProductModal" class="modal">
-        <div class="modal-card">
-            <span class="close-btn" onclick="closeModals()">&times;</span>
-            <h2>Nouvelle publication</h2>
-            <form id="productForm">
-                <label>Titre de l'offre</label>
-                <input type="text" id="prodTitle" placeholder="Ex: Sacs de maïs 25kg, Parcelle..." required>
-                
-                <label>Catégorie</label>
-                <select id="prodCategory" required>
-                    <option value="gros">Gros & Détail</option>
-                    <option value="immobilier">Immobilier</option>
-                    <option value="materiel">Équipements & Matériel</option>
-                    <option value="agriculture">Agriculture</option>
-                </select>
+            <form id="addListingForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Titre de l'annonce</label>
+                    <input type="text" id="title" required placeholder="Ex: Sac de Riz 25kg, Parcelle 20x25m à Limete..." class="w-full border rounded-lg p-2 text-sm">
+                </div>
 
-                <label>Prix</label>
-                <input type="text" id="prodPrice" placeholder="Ex: $450 ou FC 85 000" required>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Catégorie</label>
+                        <select id="category" onchange="toggleFormFields()" class="w-full border rounded-lg p-2 text-sm bg-white">
+                            <option value="immobilier">Immobilier / Terrain (Courtage)</option>
+                            <option value="gros">Vente en Gros</option>
+                            <option value="detail">Vente au Détail</option>
+                            <option value="vehicules">Véhicule / Engin</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Ville / Localisation</label>
+                        <input type="text" id="location" required placeholder="Ex: Kinshasa, Goma, Lubumbashi..." class="w-full border rounded-lg p-2 text-sm">
+                    </div>
+                </div>
 
-                <label>Condition / Quantité (MOQ)</label>
-                <input type="text" id="prodMoq" placeholder="Ex: Dès 10 pièces / Négociable" required>
+                <!-- Section Prix : Vente Marchandise -->
+                <div id="merchandiseFields" class="grid grid-cols-2 gap-3 hidden">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Prix Détail ($)</label>
+                        <input type="number" step="any" id="retailPrice" placeholder="Prix unitaire" class="w-full border rounded-lg p-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Prix de Gros ($)</label>
+                        <input type="number" step="any" id="wholesalePrice" placeholder="Prix par lot" class="w-full border rounded-lg p-2 text-sm">
+                        <input type="number" id="minWholesale" placeholder="Qté min. pour le gros" class="w-full border rounded-lg p-1.5 mt-1 text-xs">
+                    </div>
+                </div>
 
-                <label>Emplacement / Ville</label>
-                <input type="text" id="prodLocation" placeholder="Ex: Lubumbashi / Butembo" required>
+                <!-- Section Commission / Immobilier -->
+                <div id="realEstateFields" class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Prix Global ($)</label>
+                        <input type="number" step="any" id="propertyPrice" placeholder="Ex: 50000" class="w-full border rounded-lg p-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Commission Agent (%)</label>
+                        <input type="number" id="commissionRate" value="5" placeholder="Ex: 5" class="w-full border rounded-lg p-2 text-sm">
+                    </div>
+                </div>
 
-                <label>Description</label>
-                <textarea id="prodDesc" placeholder="Détails de l'offre..." rows="3" required></textarea>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Numéro WhatsApp (avec indicatif)</label>
+                    <input type="tel" id="whatsapp" required placeholder="Ex: 243810000000" class="w-full border rounded-lg p-2 text-sm">
+                </div>
 
-                <label>Lien de l'image (URL)</label>
-                <input type="text" id="prodImage" placeholder="Laisser vide pour une image par défaut">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Lien de l'image (URL)</label>
+                    <input type="url" id="imageUrl" placeholder="https://images.unsplash.com/..." class="w-full border rounded-lg p-2 text-sm">
+                    <p class="text-[10px] text-gray-400 mt-1">Laissez vide pour utiliser une image par défaut.</p>
+                </div>
 
-                <label>Numéro WhatsApp de contact</label>
-                <input type="text" id="prodContact" placeholder="Ex: +243..." required>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Description & Spécifications</label>
+                    <textarea id="description" rows="3" placeholder="Dimensions, état, documents disponibles, modalités..." class="w-full border rounded-lg p-2 text-sm"></textarea>
+                </div>
 
-                <button type="submit" class="btn-submit">Mettre en ligne</button>
+                <button type="submit" class="w-full bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2.5 rounded-lg text-sm shadow">
+                    Enregistrer et Publier
+                </button>
             </form>
         </div>
     </div>
 
-    <!-- Modal Admin (Sécurisé) -->
-    <div id="adminModal" class="modal">
-        <div class="modal-card">
-            <span class="close-btn" onclick="closeModals()">&times;</span>
-            <h2><i class="fa-solid fa-shield-halved"></i> Contrôle Administratif</h2>
-            <div id="adminAuthSection">
-                <p class="admin-hint">Entrez le mot de passe administrateur :</p>
-                <input type="password" id="adminPasswordInput" placeholder="Mot de passe">
-                <button id="adminLoginSubmit" class="btn-submit">Se connecter</button>
-            </div>
-            <div id="adminPanelSection" style="display: none;">
-                <div class="admin-top-bar">
-                    <span>Total : <strong id="adminTotalCount">0</strong> annonces</span>
-                    <button id="adminLogoutBtn" class="btn-logout">Déconnexion</button>
-                </div>
-                <div id="adminProductList" class="admin-list"></div>
-            </div>
-        </div>
-    </div>
-
     <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
